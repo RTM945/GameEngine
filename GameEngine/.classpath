@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.7.0_80">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="GameEngine/lib/natives"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/jars/lwjgl_util.jar" sourcepath="C:/Users/RTM/Downloads/lwjgl-2.9.3/javadoc/org/lwjgl/util"/>
+	<classpathentry kind="lib" path="lib/jars/lwjgl.jar" sourcepath="C:/Users/RTM/Downloads/lwjgl-2.9.3/src"/>
+	<classpathentry kind="lib" path="lib/jars/slick-util.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

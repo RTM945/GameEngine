@@ -14,7 +14,6 @@ public class DisplayManager {
 	private static final int FPC_CAP = 120;
 	
 	public static void createDispaly() {
-		
 		ContextAttribs attribs = new ContextAttribs(3, 2).withForwardCompatible(true).withProfileCore(true);
 		
 		try {

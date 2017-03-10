@@ -97,16 +97,16 @@ public class MainGameLoop {
 
 		MasterRenderer renderer = new MasterRenderer();
 
-		RawModel personModel = OBJLoader.loadObjModel("person", loader);
-		TexturedModel person = new TexturedModel(personModel, new ModelTexture(loader.loadTexture("playerTexture")));
-		person.getTexture().setUseFakeLighting(true);
-		Player player = new Player(person, new Vector3f(400, 0, -400), 0, 0, 0, 0.6f);
-		
-		Camera camera = new Camera(player);
+		RawModel naoModel = OBJLoader.loadObjModel("nao", loader);
+		TexturedModel nao = new TexturedModel(naoModel, new ModelTexture(loader.loadTexture("naoTexture")));
+		nao.getTexture().setUseFakeLighting(true);
+		nao.getTexture().setHasTransparency(true);
+		Player naop = new Player(nao, new Vector3f(400, 0, -400), 0, 0, 0, 0.1f);
+		Camera camera = new Camera(naop);
 		while (!Display.isCloseRequested()) {
 			camera.move();
-			player.move(terrain);
-			renderer.processEntity(player);
+			naop.move(terrain);
+			renderer.processEntity(naop);
 			
 			renderer.processTerrain(terrain);
 			for (Entity entity : entities) {

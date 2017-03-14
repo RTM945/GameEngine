@@ -93,7 +93,7 @@ public class Camera {
 		//鼠标滚轮
 		float zoomLevel = Mouse.getDWheel() * 0.1f;
 		//加减与角色的距离
-		if(distanceFromPlayer - zoomLevel < 100 && distanceFromPlayer - zoomLevel > 15) {
+		if(distanceFromPlayer - zoomLevel < 100 && distanceFromPlayer - zoomLevel > 5) {
 			distanceFromPlayer -= zoomLevel;
 		}
 	}

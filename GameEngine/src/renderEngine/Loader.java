@@ -17,6 +17,7 @@ import org.lwjgl.opengl.GL30;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
+import models.RawModel;
 import objConverter.ModelData;
 
 public class Loader {
@@ -46,7 +47,7 @@ public class Loader {
 	}
 	
 	public RawModel loadToVAO(float[] position) {
-		int vaoID =createVAO();
+		int vaoID = createVAO();
 		this.storeDataInAttributeList(0, 2, position);
 		unbindVAO();
 		return new RawModel(vaoID, position.length / 2);

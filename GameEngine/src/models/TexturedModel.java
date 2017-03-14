@@ -1,6 +1,5 @@
 package models;
 
-import renderEngine.RawModel;
 import textures.ModelTexture;
 
 public class TexturedModel {

@@ -24,10 +24,6 @@ public class GuiShader extends ShaderProgram{
  
     @Override
     protected void bindAttributes() {
-        super.bindAttributes(0, "position");
+        super.bindAttribute(0, "position");
     }
-     
-     
-     
- 
 }

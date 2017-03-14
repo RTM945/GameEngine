@@ -1,6 +1,7 @@
 package renderEngine;
 
 import java.io.FileInputStream;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.FloatBuffer;
@@ -19,6 +20,7 @@ import org.newdawn.slick.opengl.TextureLoader;
 
 import models.RawModel;
 import objConverter.ModelData;
+import textures.dds.DDSReader;
 
 public class Loader {
 
@@ -68,6 +70,71 @@ public class Loader {
 		int textureID = texture.getTextureID();
 		textures.add(textureID);
 		return textureID;
+	}
+	
+	public int loadDDSTexture(String fileName) {
+		
+		int texture = 0;
+
+        try {
+            FileInputStream fis = new FileInputStream("res/" + fileName + ".dds");
+            byte [] buffer = new byte[fis.available()];
+            fis.read(buffer);
+            fis.close();
+
+            int [] pixels = DDSReader.read(buffer, DDSReader.ABGR, 0);
+            int width = DDSReader.getWidth(buffer);
+            int height = DDSReader.getHeight(buffer);
+            int mipmap = DDSReader.getMipmap(buffer);
+
+            int [] textures = new int[1];
+//            gl.glGenTextures(1, textures, 0);
+            GL11.glGenTextures();
+
+            GL11.glEnable(GL11.GL_TEXTURE_2D);
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, textures[0]);
+            GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 4);
+
+            if(mipmap > 0) {
+                // mipmaps
+                for(int i=0; (width > 0) || (height > 0); i++) {
+                    if(width <= 0) width = 1;
+                    if(height <= 0) height = 1;
+                    pixels = DDSReader.read(buffer, DDSReader.ABGR, i);
+
+                    IntBuffer texBuffer = IntBuffer.wrap(pixels);
+                    GL11.glTexImage2D(GL11.GL_TEXTURE_2D, i, GL11.GL_RGBA, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, texBuffer);
+
+                    width /= 2;
+                    height /= 2;
+                }
+
+                GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
+                GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
+                GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+                GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_NEAREST);
+            }
+            else {
+                // no mipmaps
+                pixels = DDSReader.read(buffer, DDSReader.ABGR, 0);
+
+                IntBuffer texBuffer = IntBuffer.wrap(pixels);
+                GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, texBuffer);
+
+                GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
+                GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
+                GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+                GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+
+            }
+
+            texture = textures[0];
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        return texture;
 	}
 
 	private int createVAO() {

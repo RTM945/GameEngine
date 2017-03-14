@@ -24,6 +24,7 @@ import terrains.Terrain;
 import textures.ModelTexture;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
+import textures.dds.DDSLoader;
 
 public class MainGameLoop {
 
@@ -39,8 +40,7 @@ public class MainGameLoop {
 		TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("pinkFlowers"));
 		TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("path"));
 
-		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture,
-				gTexture, bTexture);
+		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
 		TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap"));
 
 		// *****************************************
@@ -97,8 +97,11 @@ public class MainGameLoop {
 		Camera camera = new Camera(player);
 		
 		List<GuiTexture> guiTextures = new ArrayList<GuiTexture>();
-		GuiTexture gui = new GuiTexture(loader.loadTexture("health"),new Vector2f(-0.8f,0.9f), new Vector2f(0.2f,0.3f));
+		GuiTexture gui = new GuiTexture(loader.loadTexture("health"), new Vector2f(-0.8f, 0.9f), new Vector2f(0.2f, 0.3f));
 		guiTextures.add(gui);
+//		GuiTexture alltur = new GuiTexture(loader.loadDDSTexture("alltur"),new Vector2f(-0.8f, 0.9f), new Vector2f(0.2f, 0.3f));
+//		guiTextures.add(alltur);
+		
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
 
 		while (!Display.isCloseRequested()) {

@@ -24,7 +24,6 @@ import terrains.Terrain;
 import textures.ModelTexture;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
-import textures.dds.DDSLoader;
 
 public class MainGameLoop {
 
@@ -64,6 +63,8 @@ public class MainGameLoop {
 
 		Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap, "heightmap");
 
+		TexturedModel lamp = new TexturedModel(OBJLoader.loadObjModel("lamp", loader), new ModelTexture(loader.loadTexture("lamp")));
+		lamp.getTexture().setUseFakeLighting(true);
 		List<Entity> entities = new ArrayList<Entity>();
 		Random random = new Random(676452);
 		for (int i = 0; i < 400; i++) {
@@ -78,29 +79,33 @@ public class MainGameLoop {
 				float x = random.nextFloat() * 800;
 				float z = random.nextFloat() * -600;
 				float y = terrain.getHeightOfTerrain(x, z);
-				entities.add(new Entity(bobble,random.nextInt(4), new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, random.nextFloat() * 0.1f + 0.6f));
+				entities.add(new Entity(bobble, random.nextInt(4), new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, random.nextFloat() * 0.1f + 0.6f));
 			}
 		}
 
-		Light light = new Light(new Vector3f(0, 10000, -7000), new Vector3f(1, 1, 1));
 		List<Light> lights = new ArrayList<Light>();
-		lights.add(light);
-//		lights.add(new Light(new Vector3f(-200,100,-200), new Vector3f(5,0,0)));
-//		lights.add(new Light(new Vector3f(200,100,200), new Vector3f(0,0,5)));
+		lights.add(new Light(new Vector3f(0, 1000, -7000), new Vector3f(0.4f, 0.4f, 0.4f)));
+		lights.add(new Light(new Vector3f(185, 10, -293), new Vector3f(2, 0, 0), new Vector3f(1, 0.01f, 0.002f)));
+		lights.add(new Light(new Vector3f(370, 17, -300), new Vector3f(0, 2, 2), new Vector3f(1, 0.01f, 0.002f)));
+		lights.add(new Light(new Vector3f(293, 7, -305), new Vector3f(2, 2, 0), new Vector3f(1, 0.01f, 0.002f)));
 
+		entities.add(new Entity(lamp, new Vector3f(185, -4.7f, -293), 0, 0, 0, 1));
+		entities.add(new Entity(lamp, new Vector3f(370, 4.2f, -300), 0, 0, 0, 1));
+		entities.add(new Entity(lamp, new Vector3f(293, -6.8f, -305), 0, 0, 0, 1));
+		
 		MasterRenderer renderer = new MasterRenderer();
 
 		RawModel bunnyModel = OBJLoader.loadObjModel("person", loader);
 		TexturedModel stanfordBunny = new TexturedModel(bunnyModel, new ModelTexture(loader.loadTexture("playerTexture")));
 
-		Player player = new Player(stanfordBunny, new Vector3f(400, 0, -400), 0, 180, 0, 0.6f);
+		Player player = new Player(stanfordBunny, new Vector3f(153, 5, -274), 0, 100, 0, 0.6f);
 		Camera camera = new Camera(player);
 		
 		List<GuiTexture> guiTextures = new ArrayList<GuiTexture>();
-		GuiTexture gui = new GuiTexture(loader.loadTexture("health"), new Vector2f(-0.8f, 0.9f), new Vector2f(0.2f, 0.3f));
+		GuiTexture gui = new GuiTexture(loader.loadTexture("health"), new Vector2f(-0.8f, 0.5f), new Vector2f(0.2f, 0.3f));
 		guiTextures.add(gui);
-//		GuiTexture alltur = new GuiTexture(loader.loadDDSTexture("alltur"),new Vector2f(-0.8f, 0.9f), new Vector2f(0.2f, 0.3f));
-//		guiTextures.add(alltur);
+		GuiTexture alltur = new GuiTexture(loader.loadDDSTexture("alltur"), new Vector2f(-0.85f, 0.8f), new Vector2f(0.15f, 0.2f));
+		guiTextures.add(alltur);
 		
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
 

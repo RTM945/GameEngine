@@ -2,6 +2,8 @@ package textures.dds;
 
 public final class DDSReader {
 	
+	
+	
 	public static final Order ARGB = new Order(16, 8, 0, 24);
 	public static final Order ABGR = new Order(0, 8, 16, 24);
 	
@@ -45,7 +47,7 @@ public final class DDSReader {
 		return (buffer[104] & 0xFF) | (buffer[105] & 0xFF) << 8 | (buffer[106] & 0xFF) << 16 | (buffer[107] & 0xFF) << 24;
 	}
 	
-	public static int [] read(byte [] buffer, Order order, int mipmapLevel) {
+	public static int[] read(byte [] buffer, Order order, int mipmapLevel) {
 		
 		// header
 		int width = getWidth(buffer);
@@ -106,7 +108,7 @@ public final class DDSReader {
 		return pixels;
 	}
 	
-	private static int getType(byte [] buffer) {
+	public static int getType(byte [] buffer) {
 		
 		int type = 0;
 		

@@ -24,6 +24,10 @@ import terrains.Terrain;
 import textures.ModelTexture;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
+import toolbox.MousePicker;
+import water.WaterRenderer;
+import water.WaterShader;
+import water.WaterTile;
 
 public class MainGameLoop {
 
@@ -62,66 +66,80 @@ public class MainGameLoop {
 		fern.getTexture().setHasTransparency(true);
 
 		Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap, "heightmap");
-
+		List<Terrain> terrains = new ArrayList<>();
+		terrains.add(terrain);
+		
 		TexturedModel lamp = new TexturedModel(OBJLoader.loadObjModel("lamp", loader), new ModelTexture(loader.loadTexture("lamp")));
 		lamp.getTexture().setUseFakeLighting(true);
 		List<Entity> entities = new ArrayList<Entity>();
-		Random random = new Random(676452);
-		for (int i = 0; i < 400; i++) {
-			if (i % 3 == 0) {
-				float x = random.nextFloat() * 800;
-				float z = random.nextFloat() * -600;
-				float y = terrain.getHeightOfTerrain(x, z);
-				
-				entities.add(new Entity(fern, random.nextInt(4), new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, 0.9f));
-			}
-			if (i % 1 == 0) {
-				float x = random.nextFloat() * 800;
-				float z = random.nextFloat() * -600;
-				float y = terrain.getHeightOfTerrain(x, z);
-				entities.add(new Entity(bobble, random.nextInt(4), new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, random.nextFloat() * 0.1f + 0.6f));
-			}
-		}
+//		Random random = new Random(676452);
+//		for (int i = 0; i < 400; i++) {
+//			if (i % 3 == 0) {
+//				float x = random.nextFloat() * 800;
+//				float z = random.nextFloat() * -600;
+//				float y = terrain.getHeightOfTerrain(x, z);
+//				
+//				entities.add(new Entity(fern, random.nextInt(4), new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, 0.9f));
+//			}
+//			if (i % 1 == 0) {
+//				float x = random.nextFloat() * 800;
+//				float z = random.nextFloat() * -600;
+//				float y = terrain.getHeightOfTerrain(x, z);
+//				entities.add(new Entity(bobble, random.nextInt(4), new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, random.nextFloat() * 0.1f + 0.6f));
+//			}
+//		}
 
 		List<Light> lights = new ArrayList<Light>();
-		lights.add(new Light(new Vector3f(0, 1000, -7000), new Vector3f(0.4f, 0.4f, 0.4f)));
-		lights.add(new Light(new Vector3f(185, 10, -293), new Vector3f(2, 0, 0), new Vector3f(1, 0.01f, 0.002f)));
-		lights.add(new Light(new Vector3f(370, 17, -300), new Vector3f(0, 2, 2), new Vector3f(1, 0.01f, 0.002f)));
+		Light sun = new Light(new Vector3f(0, 1000, 0), new Vector3f(1f, 1f, 1f));
+		Light lampLight1 = new Light(new Vector3f(185, 10, -293), new Vector3f(2, 0, 0), new Vector3f(1, 0.01f, 0.002f));
+		Light lampLight2 = new Light(new Vector3f(370, 17, -300), new Vector3f(0, 2, 2), new Vector3f(1, 0.01f, 0.002f));
+		lights.add(sun);
+		lights.add(lampLight1);
+		lights.add(lampLight2);
 		lights.add(new Light(new Vector3f(293, 7, -305), new Vector3f(2, 2, 0), new Vector3f(1, 0.01f, 0.002f)));
 
-		entities.add(new Entity(lamp, new Vector3f(185, -4.7f, -293), 0, 0, 0, 1));
-		entities.add(new Entity(lamp, new Vector3f(370, 4.2f, -300), 0, 0, 0, 1));
-		entities.add(new Entity(lamp, new Vector3f(293, -6.8f, -305), 0, 0, 0, 1));
+		Entity lampEntity = new Entity(lamp, new Vector3f(185, -4.7f, -293), 0, 0, 0, 1);
+//		entities.add(lampEntity);
+//		entities.add(new Entity(lamp, new Vector3f(370, 4.2f, -300), 0, 0, 0, 1));
+//		entities.add(new Entity(lamp, new Vector3f(293, -6.8f, -305), 0, 0, 0, 1));
 		
-		MasterRenderer renderer = new MasterRenderer();
+		MasterRenderer renderer = new MasterRenderer(loader);
 
 		RawModel bunnyModel = OBJLoader.loadObjModel("person", loader);
 		TexturedModel stanfordBunny = new TexturedModel(bunnyModel, new ModelTexture(loader.loadTexture("playerTexture")));
 
-		Player player = new Player(stanfordBunny, new Vector3f(153, 5, -274), 0, 100, 0, 0.6f);
+		Player player = new Player(stanfordBunny, new Vector3f(100, 40, -100), 0, 100, 0, 0.6f);
 		Camera camera = new Camera(player);
 		
 		List<GuiTexture> guiTextures = new ArrayList<GuiTexture>();
-		GuiTexture gui = new GuiTexture(loader.loadTexture("health"), new Vector2f(-0.8f, 0.5f), new Vector2f(0.2f, 0.3f));
+		GuiTexture gui = new GuiTexture(loader.loadTexture("health"), new Vector2f(-0.8f, 0.3f), new Vector2f(0.2f, 0.3f));
 		guiTextures.add(gui);
-		GuiTexture alltur = new GuiTexture(loader.loadDDSTexture("alltur"), new Vector2f(-0.85f, 0.8f), new Vector2f(0.15f, 0.2f));
+		GuiTexture alltur = new GuiTexture(loader.loadDDSTexture("alltur"), new Vector2f(-0.83f, 0.7f), new Vector2f(0.18f, 0.32f));
 		guiTextures.add(alltur);
 		
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
+		
+		MousePicker picker = new MousePicker(camera, renderer.getProjectionMatrix(), terrain);
 
+		//water
+		WaterShader waterShader = new WaterShader();
+		WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix());
+		List<WaterTile> waters = new ArrayList<>();
+		waters.add(new WaterTile(100, -100, 0));
+		
 		while (!Display.isCloseRequested()) {
 			player.move(terrain);
 			camera.move();
-			renderer.processEntity(player);
-			renderer.processTerrain(terrain);
-			for (Entity entity : entities) {
-				renderer.processEntity(entity);
-			}
-			renderer.render(lights, camera);
+			
+			picker.update();
+//			renderer.processEntity(player);
+			renderer.renderScene(entities, terrains, lights, camera);
+			waterRenderer.render(waters, camera);
 			guiRenderer.render(guiTextures);
 			DisplayManager.updateDisplay();
 		}
 
+		waterShader.cleanUp();
 		guiRenderer.cleanUp();
 		renderer.cleanUp();
 		loader.cleanUp();

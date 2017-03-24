@@ -22,7 +22,6 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
 import models.RawModel;
-import objConverter.ModelData;
 import shaders.TextureData;
 import textures.dds.DDSReader;
 
@@ -34,7 +33,7 @@ public class Loader {
 
 	public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals, int[] indices) {
 		int vaoID = createVAO();
-		binIndicesBuffer(indices);
+		bindIndicesBuffer(indices);
 		storeDataInAttributeList(0, 3, positions);
 		storeDataInAttributeList(1, 2, textureCoords);
 		storeDataInAttributeList(2, 3, normals);
@@ -42,15 +41,16 @@ public class Loader {
 		return new RawModel(vaoID, indices.length);
 	}
 	
-	public RawModel loadToVAO(ModelData modelData) {
-		int vaoID = createVAO();
-		binIndicesBuffer(modelData.getIndices());
-		storeDataInAttributeList(0, 3, modelData.getVertices());
-		storeDataInAttributeList(1, 2, modelData.getTextureCoords());
-		storeDataInAttributeList(2, 3, modelData.getNormals());
-		unbindVAO();
-		return new RawModel(vaoID, modelData.getIndices().length);
-	}
+	public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals, float[] tangents, int[] indices) {
+        int vaoID = createVAO();
+        bindIndicesBuffer(indices);
+        storeDataInAttributeList(0, 3, positions);
+        storeDataInAttributeList(1, 2, textureCoords);
+        storeDataInAttributeList(2, 3, normals);
+        storeDataInAttributeList(3, 3, tangents);
+        unbindVAO();
+        return new RawModel(vaoID, indices.length);
+    }
 	
 	public RawModel loadToVAO(float[] position, int dimensions) {
 		int vaoID = createVAO();
@@ -59,13 +59,21 @@ public class Loader {
 		return new RawModel(vaoID, position.length / dimensions);
 	}
 
+	public int loadToVAO(float[] positions, float[] textureCoords) {
+		int vaoID = createVAO();
+		storeDataInAttributeList(0, 2, positions);
+		storeDataInAttributeList(1, 2, textureCoords);
+		unbindVAO();
+		return vaoID;
+	}
+
 	public int loadTexture(String fileName) {
 		Texture texture = null;
 		try {
 			texture = TextureLoader.getTexture("PNG", new FileInputStream("res/" + fileName + ".png"));
 			GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
-			GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, -0.4f);
+			GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, 0);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -181,11 +189,10 @@ public class Loader {
 		GL30.glBindVertexArray(0);
 	}
 
-	private void binIndicesBuffer(int[] indices) {
+	private void bindIndicesBuffer(int[] indices) {
 		int vboID = GL15.glGenBuffers();
 		vbos.add(vboID);
 		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, vboID);
-		;
 		IntBuffer buffer = storeDataInIntBuffer(indices);
 		GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
 	}

@@ -68,10 +68,6 @@ private static final float SIZE = 500f;
 	private SkyboxShader shader;
 	private float time = 0;
 	
-	private final static int QUARTERDAY = 300000;
-	private final static int ADAY = 300000 * 4;
-	
-	
 	public SkyboxRenderer(Loader loader, Matrix4f projectionMatrix) {
 		cube = loader.loadToVAO(VERTICES, 3);
 		texture = loader.loadCubeMap(TEXTURE_FILES);
@@ -97,33 +93,33 @@ private static final float SIZE = 500f;
 	}
 	
 	private void bindTextures(){
-		time += DisplayManager.getFrameTimeSeconds() * 1000;
-		time %= ADAY;
-		int texture1;
-		int texture2;
-		float blendFactor;		
-		if(time >= 0 && time < QUARTERDAY){
-			texture1 = nightTexture;
-			texture2 = nightTexture;
-			blendFactor = (time - 0) / QUARTERDAY;
-		}else if(time >= QUARTERDAY && time < QUARTERDAY * 2){
-			texture1 = nightTexture;
-			texture2 = texture;
-			blendFactor = (time - QUARTERDAY) / QUARTERDAY;
-		}else if(time >= QUARTERDAY * 2 && time < QUARTERDAY * 3){
-			texture1 = texture;
-			texture2 = texture;
-			blendFactor = (time - QUARTERDAY * 2) / QUARTERDAY;
-		}else{
-			texture1 = texture;
-			texture2 = nightTexture;
-			blendFactor = (time - QUARTERDAY * 3) / QUARTERDAY;
-		}
-
-		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, texture1);
-		GL13.glActiveTexture(GL13.GL_TEXTURE1);
-		GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, texture2);
-		shader.loadBlendFactor(blendFactor);
-	}
+        time += DisplayManager.getFrameTimeSeconds() * 1000;
+        time %= 24000;
+        int texture1;
+        int texture2;
+        float blendFactor;      
+        if(time >= 0 && time < 5000){
+            texture1 = texture;
+            texture2 = texture;
+            blendFactor = (time - 0)/(5000 - 0);
+        }else if(time >= 5000 && time < 8000){
+            texture1 = texture;
+            texture2 = texture;
+            blendFactor = (time - 5000)/(8000 - 5000);
+        }else if(time >= 8000 && time < 21000){
+            texture1 = texture;
+            texture2 = texture;
+            blendFactor = (time - 8000)/(21000 - 8000);
+        }else{
+            texture1 = texture;
+            texture2 = texture;
+            blendFactor = (time - 21000)/(24000 - 21000);
+        }
+ 
+        GL13.glActiveTexture(GL13.GL_TEXTURE0);
+        GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, texture1);
+        GL13.glActiveTexture(GL13.GL_TEXTURE1);
+        GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, texture2);
+        shader.loadBlendFactor(blendFactor);
+    }
 }

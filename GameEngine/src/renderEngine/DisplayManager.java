@@ -23,7 +23,7 @@ public class DisplayManager {
 		try {
 			Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
 			Display.create(new PixelFormat(), attribs);
-			Display.setTitle("First Dispaly");
+			Display.setTitle("First Dispaly currentFrameTime:" + getFrameTimeSeconds());
 		} catch (LWJGLException e) {
 			e.printStackTrace();
 		}
@@ -37,6 +37,7 @@ public class DisplayManager {
 		long currentFrameTime = getCurrentTime();
 		delta = (currentFrameTime - lastFrameTime) / 1000f;
 		lastFrameTime = currentFrameTime;
+		Display.setTitle("First Dispaly currentFrameTime:" + getFrameTimeSeconds());
 	}
 	
 	public static float getFrameTimeSeconds() {

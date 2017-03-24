@@ -11,11 +11,14 @@ import java.util.List;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import models.RawModel;
+import renderEngine.Loader;
+
 public class OBJFileLoader {
 
 	private static final String RES_LOC = "res/";
 
-	public static ModelData loadOBJ(String objFileName) {
+	public static RawModel loadOBJ(String objFileName, Loader loader) {
 		FileReader isr = null;
 		File objFile = new File(RES_LOC + objFileName + ".obj");
 		try {
@@ -70,8 +73,10 @@ public class OBJFileLoader {
 		float[] normalsArray = new float[vertices.size() * 3];
 		float furthest = convertDataToArrays(vertices, textures, normals, verticesArray, texturesArray, normalsArray);
 		int[] indicesArray = convertIndicesListToArray(indices);
-		ModelData data = new ModelData(verticesArray, texturesArray, normalsArray, indicesArray, furthest);
-		return data;
+//		ModelData data = new ModelData(verticesArray, texturesArray, normalsArray, indicesArray, furthest);
+//		return data;
+		return loader.loadToVAO(verticesArray, texturesArray, normalsArray, indicesArray);
+		
 	}
 
 	private static void processVertex(String[] vertex, List<Vertex> vertices, List<Integer> indices) {
@@ -96,8 +101,7 @@ public class OBJFileLoader {
 		return indicesArray;
 	}
 
-	private static float convertDataToArrays(List<Vertex> vertices, List<Vector2f> textures, List<Vector3f> normals,
-			float[] verticesArray, float[] texturesArray, float[] normalsArray) {
+	private static float convertDataToArrays(List<Vertex> vertices, List<Vector2f> textures, List<Vector3f> normals, float[] verticesArray, float[] texturesArray, float[] normalsArray) {
 		float furthestPoint = 0;
 		for (int i = 0; i < vertices.size(); i++) {
 			Vertex currentVertex = vertices.get(i);

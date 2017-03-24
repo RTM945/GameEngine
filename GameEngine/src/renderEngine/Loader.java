@@ -88,7 +88,6 @@ public class Loader {
 			int mipmap = DDSReader.getMipmap(buffer);
 
 			textureID = GL11.glGenTextures();
-			GL13.glActiveTexture(GL13.GL_TEXTURE0);
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
 			if(mipmap > 0) {
                 // mipmaps

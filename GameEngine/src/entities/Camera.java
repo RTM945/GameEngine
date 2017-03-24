@@ -3,6 +3,8 @@ package entities;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
 
+import terrains.Terrain;
+
 public class Camera {
 	
 	private float distanceFromPlayer = 50;
@@ -21,9 +23,11 @@ public class Camera {
 	private float yaw = 0;
 	
 	private Player player;
+	private Terrain terrain;
 
-	public Camera(Player player) {
+	public Camera(Player player, Terrain terrain) {
 		this.player = player;
+		this.terrain = terrain;
 		player.setCamera(this);
 	}
 
@@ -76,6 +80,10 @@ public class Camera {
 		position.x = player.getPosition().x - offsetX;
 		position.z = player.getPosition().z - offsetZ;
 		position.y = player.getPosition().y + verticDistance;
+		float heightOfTerrain = terrain.getHeightOfTerrain(position.x, position.z);
+		if(position.y <= heightOfTerrain + 5) {
+			position.y = heightOfTerrain + 5;
+		}
 	}
 	
 	private float calculateHorizontalDistance() {
@@ -101,9 +109,10 @@ public class Camera {
 	private void calculatePitch() {
 		if(Mouse.isButtonDown(1)) {
 			float pitchChange = Mouse.getDY() * 0.1f;
-			if(pitch - pitchChange > 5 && pitch - pitchChange < 90) {
-				pitch -= pitchChange;
-			}
+			pitch -= pitchChange;
+//			if(pitch - pitchChange > 5 && pitch - pitchChange < 90) {
+//				pitch -= pitchChange;
+//			}
 		}
 	}
 	
@@ -115,6 +124,10 @@ public class Camera {
 			float angleChange = Mouse.getDX() * 0.3f;
 			angleAroundPalyer -= angleChange;
 		}
+	}
+	
+	public void invertPitch() {
+		this.pitch = -pitch;
 	}
 
 }

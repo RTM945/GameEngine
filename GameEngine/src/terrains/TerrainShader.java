@@ -1,19 +1,21 @@
-package shaders;
+package terrains;
 
 import java.util.List;
 
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 
 import toolbox.Maths;
 import entities.Camera;
 import entities.Light;
+import shaders.ShaderProgram;
 
 public class TerrainShader extends ShaderProgram{
 	
 	private static final int MAX_LIGHTS = 4;
-	private static final String VERTEX_FILE = "src/shaders/terrainVertexShader.txt";
-	private static final String FRAGMENT_FILE = "src/shaders/terrainFragmentShader.txt";
+	private static final String VERTEX_FILE = "src/terrains/terrainVertexShader.txt";
+	private static final String FRAGMENT_FILE = "src/terrains/terrainFragmentShader.txt";
 	
 	private int location_transformationMatrix;
 	private int location_projectionMatrix;
@@ -29,6 +31,7 @@ public class TerrainShader extends ShaderProgram{
 	private int location_gTexture;
 	private int location_bTexture;
 	private int location_blendMap;
+	private int location_panle;
 
 	public TerrainShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE);
@@ -54,6 +57,7 @@ public class TerrainShader extends ShaderProgram{
 		location_gTexture = super.getUniformLocation("gTexture");
 		location_bTexture = super.getUniformLocation("bTexture");
 		location_blendMap = super.getUniformLocation("blendMap");
+		location_panle = super.getUniformLocation("plane");
 		
 		location_lightPosition = new int[MAX_LIGHTS];
 		location_lightColour = new int[MAX_LIGHTS];
@@ -71,6 +75,10 @@ public class TerrainShader extends ShaderProgram{
 		super.loadInt(location_gTexture, 2);
 		super.loadInt(location_bTexture, 3);
 		super.loadInt(location_blendMap, 4);
+	}
+	
+	public void loadClipPlane(Vector4f plane) {
+		super.loadVector(location_panle, plane);
 	}
 	
 	public void loadSkyColour(float r, float g, float b){

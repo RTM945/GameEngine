@@ -25,6 +25,8 @@ import models.RawModel;
 import models.TexturedModel;
 import normalMappingObjConverter.NormalMappedObjLoader;
 import objConverter.OBJFileLoader;
+import particles.ParticleMaster;
+import particles.ParticleSystem;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
@@ -45,10 +47,13 @@ public class MainGameLoop {
 		DisplayManager.createDispaly();
 		Loader loader = new Loader();
 		TextMaster.init(loader);
-		
-		FontType font = new FontType(loader.loadTexture("verdana"), new File("res/verdana.fnt"));
-		GUIText text = new GUIText("test", 1, font, new Vector2f(0, 0), 1f, true);
-		text.setColour(1, 0, 0);
+        MasterRenderer renderer = new MasterRenderer(loader);
+        ParticleMaster.init(loader, renderer.getProjectionMatrix());
+        
+        
+		FontType font = new FontType(loader.loadTexture("candara"), new File("res/candara.fnt"));
+		GUIText text = new GUIText("game text test", 3, font, new Vector2f(0, 0.8f), 1f, true);
+		text.setColour(0.1f, 0.1f, 0.1f);
 		// *********TERRAIN TEXTURE STUFF**********
 
 		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grassy2"));
@@ -136,9 +141,7 @@ public class MainGameLoop {
         List<Light> lights = new ArrayList<Light>();
         Light sun = new Light(new Vector3f(10000, 10000, -10000), new Vector3f(1.3f, 1.3f, 1.3f));
         lights.add(sun);
- 
-        MasterRenderer renderer = new MasterRenderer(loader);
- 
+
         RawModel bunnyModel = OBJFileLoader.loadOBJ("person", loader);
         TexturedModel stanfordBunny = new TexturedModel(bunnyModel, new ModelTexture(loader.loadTexture("playerTexture")));
  
@@ -157,12 +160,24 @@ public class MainGameLoop {
         WaterTile water = new WaterTile(75, -75, 0);
         waters.add(water);
         
+        ParticleSystem particleSystem = new ParticleSystem(10, 25, 0.3f, 4, 1);
+        particleSystem.randomizeRotation();
+        particleSystem.setDirection(new Vector3f(0, 1, 0), 0.1f);
+        particleSystem.setLifeError(0.1f);
+        particleSystem.setSpeedError(0.4f);
+        particleSystem.setScaleError(0.8f);
+        
+        
         //****************Game Loop Below*********************
         
         while (!Display.isCloseRequested()) {
             player.move(terrain);
             camera.move();
             picker.update();
+            ParticleMaster.update();
+            
+            particleSystem.generateParticles(player.getPosition());
+            
             entity.increaseRotation(0, 1, 0);
             entity2.increaseRotation(0, 1, 0);
             entity3.increaseRotation(0, 1, 0);
@@ -186,12 +201,16 @@ public class MainGameLoop {
             buffers.unbindCurrentFrameBuffer(); 
             renderer.renderScene(entities, normalMapEntities, terrains, lights, camera, new Vector4f(0, -1, 0, 100000));    
             waterRenderer.render(waters, camera, sun);
+            
+            ParticleMaster.renderParticles(camera);
+            
             guiRenderer.render(guiTextures);
             TextMaster.render();
              
             DisplayManager.updateDisplay();
         }
 
+        ParticleMaster.cleanUp();
         TextMaster.cleanUp();
 		buffers.cleanUp();
 		waterShader.cleanUp();

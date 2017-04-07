@@ -53,15 +53,14 @@ public class GUIText {
 	 * @param centered
 	 *            - whether the text should be centered or not.
 	 */
-	public GUIText(String text, float fontSize, FontType font, Vector2f position, float maxLineLength,
-			boolean centered) {
+	public GUIText(String text, float fontSize, FontType font, Vector2f position, float maxLineLength, boolean centered) {
 		this.textString = text;
 		this.fontSize = fontSize;
 		this.font = font;
 		this.position = position;
 		this.lineMaxSize = maxLineLength;
 		this.centerText = centered;
-		TextMaster.loadText(this);;
+		TextMaster.loadText(this);
 	}
 
 	/**

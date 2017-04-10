@@ -1,4 +1,4 @@
-package textures;
+package terrains;
 
 public class TerrainTexturePack {
 

@@ -10,7 +10,6 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 import models.RawModel;
-import textures.TerrainTexturePack;
 import toolbox.Maths;
 
 public class TerrainRenderer {

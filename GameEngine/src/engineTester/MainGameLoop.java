@@ -27,13 +27,14 @@ import normalMappingObjConverter.NormalMappedObjLoader;
 import objConverter.OBJFileLoader;
 import particles.ParticleMaster;
 import particles.ParticleSystem;
+import particles.ParticleTexture;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
 import terrains.Terrain;
+import terrains.TerrainTexture;
+import terrains.TerrainTexturePack;
 import textures.ModelTexture;
-import textures.TerrainTexture;
-import textures.TerrainTexturePack;
 import toolbox.MousePicker;
 import water.WaterFrameBuffers;
 import water.WaterRenderer;
@@ -52,8 +53,8 @@ public class MainGameLoop {
         
         
 		FontType font = new FontType(loader.loadTexture("candara"), new File("res/candara.fnt"));
-		GUIText text = new GUIText("game text test", 3, font, new Vector2f(0, 0.8f), 1f, true);
-		text.setColour(0.1f, 0.1f, 0.1f);
+		GUIText text = new GUIText("Burning Nao!", 3, font, new Vector2f(0, 0.8f), 1f, true);
+		text.setColour(1f, 0.0f, 0.0f);
 		// *********TERRAIN TEXTURE STUFF**********
 
 		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grassy2"));
@@ -142,10 +143,10 @@ public class MainGameLoop {
         Light sun = new Light(new Vector3f(10000, 10000, -10000), new Vector3f(1.3f, 1.3f, 1.3f));
         lights.add(sun);
 
-        RawModel bunnyModel = OBJFileLoader.loadOBJ("person", loader);
-        TexturedModel stanfordBunny = new TexturedModel(bunnyModel, new ModelTexture(loader.loadTexture("playerTexture")));
+        RawModel bunnyModel = OBJFileLoader.loadOBJ("nao", loader);
+        TexturedModel stanfordBunny = new TexturedModel(bunnyModel, new ModelTexture(loader.loadTexture("naoTexture")));
  
-        Player player = new Player(stanfordBunny, new Vector3f(75, 5, -75), 0, 100, 0, 0.6f);
+        Player player = new Player(stanfordBunny, new Vector3f(20, 5, -20), 0, 100, 0, 0.03f);
         entities.add(player);
         Camera camera = new Camera(player, terrain);
         List<GuiTexture> guiTextures = new ArrayList<GuiTexture>();
@@ -160,12 +161,14 @@ public class MainGameLoop {
         WaterTile water = new WaterTile(75, -75, 0);
         waters.add(water);
         
-        ParticleSystem particleSystem = new ParticleSystem(10, 25, 0.3f, 4, 1);
+        ParticleTexture particleTexture = new ParticleTexture(loader.loadTexture("particleAtlas"), 4, true);
+        
+        ParticleSystem particleSystem = new ParticleSystem(particleTexture, 40, 10, 0.1f, 1, 1.6f);
         particleSystem.randomizeRotation();
         particleSystem.setDirection(new Vector3f(0, 1, 0), 0.1f);
         particleSystem.setLifeError(0.1f);
-        particleSystem.setSpeedError(0.4f);
-        particleSystem.setScaleError(0.8f);
+        particleSystem.setSpeedError(0.25f);
+        particleSystem.setScaleError(0.5f);
         
         
         //****************Game Loop Below*********************
@@ -174,7 +177,7 @@ public class MainGameLoop {
             player.move(terrain);
             camera.move();
             picker.update();
-            ParticleMaster.update();
+            ParticleMaster.update(camera);
             
             particleSystem.generateParticles(player.getPosition());
             

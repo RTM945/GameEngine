@@ -115,7 +115,6 @@ private static final float SIZE = 500f;
             texture2 = texture;
             blendFactor = (time - 21000)/(24000 - 21000);
         }
- 
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, texture1);
         GL13.glActiveTexture(GL13.GL_TEXTURE1);

@@ -143,10 +143,10 @@ public class MainGameLoop {
         Light sun = new Light(new Vector3f(10000, 10000, -10000), new Vector3f(1.3f, 1.3f, 1.3f));
         lights.add(sun);
 
-        RawModel bunnyModel = OBJFileLoader.loadOBJ("nao", loader);
-        TexturedModel stanfordBunny = new TexturedModel(bunnyModel, new ModelTexture(loader.loadTexture("naoTexture")));
+        RawModel bunnyModel = OBJFileLoader.loadOBJ("person", loader);
+        TexturedModel stanfordBunny = new TexturedModel(bunnyModel, new ModelTexture(loader.loadTexture("playerTexture")));
  
-        Player player = new Player(stanfordBunny, new Vector3f(20, 5, -20), 0, 100, 0, 0.03f);
+        Player player = new Player(stanfordBunny, new Vector3f(20, 5, -20), 0, 100, 0, 0.6f);
         entities.add(player);
         Camera camera = new Camera(player, terrain);
         List<GuiTexture> guiTextures = new ArrayList<GuiTexture>();

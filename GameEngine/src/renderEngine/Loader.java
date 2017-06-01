@@ -212,7 +212,7 @@ public class Loader {
 		return buffer;
 	}
 	
-	public void updataVBO(int vbo, float[] data, FloatBuffer buffer) {
+	public void updateVBO(int vbo, float[] data, FloatBuffer buffer) {
 		buffer.clear();
 		buffer.put(data);
 		buffer.flip();

@@ -20,6 +20,7 @@ public class ParticleShader extends ShaderProgram {
 	protected void getAllUniformLocations() {
 		location_numberOfRows = super.getUniformLocation("numberOfRows");
 		location_projectionMatrix = super.getUniformLocation("projectionMatrix");
+
 	}
 
 	@Override
@@ -29,7 +30,7 @@ public class ParticleShader extends ShaderProgram {
 		super.bindAttribute(5, "texOffsets");
 		super.bindAttribute(6, "blendFactor");
 	}
-	
+
 	protected void loadNumberOfRows(float numberOfRows) {
 		super.loadFloat(location_numberOfRows, numberOfRows);
 	}

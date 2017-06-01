@@ -16,18 +16,22 @@ public class ParticleSystem {
 	private boolean randomRotation = false;
 	private Vector3f direction;
 	private float directionDeviation = 0;
-	
+
 	private ParticleTexture texture;
+	
+//	private Particle reusableParticle = new Particle();
 
 	private Random random = new Random();
 
-	public ParticleSystem(ParticleTexture texture, float pps, float speed, float gravityComplient, float lifeLength, float scale) {
+	public ParticleSystem(ParticleTexture texture, float pps, float speed, float gravityComplient, float lifeLength,
+			float scale) {
 		this.pps = pps;
 		this.averageSpeed = speed;
 		this.gravityComplient = gravityComplient;
 		this.averageLifeLength = lifeLength;
 		this.averageScale = scale;
 		this.texture = texture;
+//		ParticleMaster.addParticle(reusableParticle);
 	}
 
 	/**
@@ -94,6 +98,7 @@ public class ParticleSystem {
 		velocity.scale(generateValue(averageSpeed, speedError));
 		float scale = generateValue(averageScale, scaleError);
 		float lifeLength = generateValue(averageLifeLength, lifeError);
+//		reusableParticle.setActive(texture, new Vector3f(center), velocity, gravityComplient, lifeLength, generateRotation(), scale);
 		new Particle(texture, new Vector3f(center), velocity, gravityComplient, lifeLength, generateRotation(), scale);
 	}
 
@@ -141,4 +146,5 @@ public class ParticleSystem {
 		float y = (float) (rootOneMinusZSquared * Math.sin(theta));
 		return new Vector3f(x, y, z);
 	}
+
 }

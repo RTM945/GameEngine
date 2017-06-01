@@ -1,6 +1,7 @@
 #version 140
 
 in vec2 position;
+
 in mat4 modelViewMatrix;
 in vec4 texOffsets;
 in float blendFactor;
@@ -20,7 +21,7 @@ void main(void){
 	textureCoords1 = textureCoords + texOffsets.xy;
 	textureCoords2 = textureCoords + texOffsets.zw;
 	blend = blendFactor;
-	
+
 	gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 0.0, 1.0);
 
 }

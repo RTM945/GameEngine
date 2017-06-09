@@ -14,6 +14,7 @@ import entities.Light;
 import models.RawModel;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
+import renderEngine.MasterRenderer;
 import toolbox.Maths;
 
 public class WaterRenderer {
@@ -60,6 +61,7 @@ public class WaterRenderer {
 		moveFactor %= 1;
 		shader.loadMoveFactor(moveFactor);
 		shader.loadLight(sun);
+		shader.loadSkyColour(new Vector3f(MasterRenderer.RED, MasterRenderer.GREEN, MasterRenderer.BLUE));
 		GL30.glBindVertexArray(quad.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);

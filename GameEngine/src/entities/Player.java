@@ -25,12 +25,19 @@ public class Player extends Entity{
 	private boolean isInAir = false;
 	
 	private Camera camera;
-
+	
+	private Terrain terrain;
+	
 	public Player(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
 		super(model, position, rotX, rotY, rotZ, scale);
 	}
 	
+	public Terrain getTerrain() {
+		return terrain;
+	}
+	
 	public void move(Terrain terrain) {
+		this.terrain = terrain;
 		checkInput();
 		super.increaseRotation(0, currentTurnSpeed * DisplayManager.getFrameTimeSeconds(), 0);
 		float distance = currentSpeed * DisplayManager.getFrameTimeSeconds();

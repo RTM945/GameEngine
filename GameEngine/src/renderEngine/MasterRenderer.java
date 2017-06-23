@@ -26,8 +26,8 @@ import terrains.TerrainShader;
 public class MasterRenderer {
 
 	public static final float FOV = 70;
-	public static final float NEAR_PLANE = 0.1f;
-	public static final float FAR_PLANE = 1000;
+	public static final float NEAR_PLANE = 0.01f;
+	public static final float FAR_PLANE = 10000;
 	
 	public static final float RED = 0.83f;
     public static final float GREEN = 0.9f;
@@ -100,7 +100,7 @@ public class MasterRenderer {
 		terrainShader.loadClipPlane(clipPlane);
 		terrainShader.loadSkyColour(RED, GREEN, BLUE);
 		terrainShader.loadLights(lights);
-		terrainShader.loadViewMatrix(	camera);
+		terrainShader.loadViewMatrix(camera);
 		terrainRenderer.render(terrains, shadowMapMasterRenderer.getToShadowMapSpaceMatrix());
 		terrainShader.stop();
 		skyboxRenderer.render(camera, RED, GREEN, BLUE);
@@ -164,20 +164,20 @@ public class MasterRenderer {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, getShadowMapTexture());
 	}
 
-	private void createProjectionMatrix() {
-		float aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
-		float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f))) * aspectRatio);
-		float x_scale = y_scale / aspectRatio;
-		float frustum_length = FAR_PLANE - NEAR_PLANE;
-
-		projectionMatrix = new Matrix4f();
-		projectionMatrix.m00 = x_scale;
-		projectionMatrix.m11 = y_scale;
-		projectionMatrix.m22 = -((FAR_PLANE + NEAR_PLANE) / frustum_length);
-		projectionMatrix.m23 = -1;
-		projectionMatrix.m32 = -((2 * NEAR_PLANE * FAR_PLANE) / frustum_length);
-		projectionMatrix.m33 = 0;
-	}
+	private void createProjectionMatrix(){
+        float aspectRatio = (float) Display.getDisplayMode().getWidth() / (float) Display.getDisplayMode().getHeight();
+        float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f))) * aspectRatio);
+        float x_scale = y_scale / aspectRatio;
+        float frustum_length = FAR_PLANE - NEAR_PLANE;
+        
+        projectionMatrix = new Matrix4f();
+        projectionMatrix.m00 = x_scale;
+        projectionMatrix.m11 = y_scale;
+        projectionMatrix.m22 = -((FAR_PLANE + NEAR_PLANE) / frustum_length);
+        projectionMatrix.m23 = -1;
+        projectionMatrix.m32 = -((2 * NEAR_PLANE * FAR_PLANE) / frustum_length);
+        projectionMatrix.m33 = 0;
+    }
 	
 //	 private void createProjectionMatrix(){
 //    	projectionMatrix = new Matrix4f();

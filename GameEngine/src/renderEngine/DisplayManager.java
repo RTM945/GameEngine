@@ -6,6 +6,7 @@ import org.lwjgl.opengl.ContextAttribs;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.PixelFormat;
 
 public class DisplayManager {
@@ -22,8 +23,9 @@ public class DisplayManager {
 		
 		try {
 			Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
-			Display.create(new PixelFormat(), attribs);
-			Display.setTitle("First Dispaly currentFrameTime:" + getFrameTimeSeconds());
+			Display.create(new PixelFormat().withSamples(8).withDepthBits(24), attribs);
+			Display.setTitle("First Dispaly!");
+			GL11.glEnable(GL13.GL_MULTISAMPLE);
 		} catch (LWJGLException e) {
 			e.printStackTrace();
 		}
@@ -37,7 +39,7 @@ public class DisplayManager {
 		long currentFrameTime = getCurrentTime();
 		delta = (currentFrameTime - lastFrameTime) / 1000f;
 		lastFrameTime = currentFrameTime;
-		Display.setTitle("First Dispaly currentFrameTime:" + getFrameTimeSeconds());
+		Display.setTitle("First Dispaly!");
 	}
 	
 	public static float getFrameTimeSeconds() {

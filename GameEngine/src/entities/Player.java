@@ -30,6 +30,7 @@ public class Player extends Entity{
 	
 	public Player(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
 		super(model, position, rotX, rotY, rotZ, scale);
+		isPlayer = true;
 	}
 	
 	public Terrain getTerrain() {

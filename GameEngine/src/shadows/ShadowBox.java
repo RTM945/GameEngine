@@ -73,7 +73,7 @@ public class ShadowBox {
 		Vector3f centerFar = Vector3f.add(toFar, cam.getPosition(), null);
 
 		Vector4f[] points = calculateFrustumVertices(rotation, forwardVector, centerNear, centerFar);
-
+		
 		boolean first = true;
 		for (Vector4f point : points) {
 			if (first) {

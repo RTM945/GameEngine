@@ -10,6 +10,7 @@ public class Entity {
 	private Vector3f position;
 	private float rotX, rotY, rotZ;
 	private float scale;
+	protected boolean isPlayer = false;
 	
 	private int textureIndex = 0;
 	
@@ -100,6 +101,14 @@ public class Entity {
 
 	public void setScale(float scale) {
 		this.scale = scale;
+	}
+
+	public boolean isPlayer() {
+		return isPlayer;
+	}
+
+	public void setPlayer(boolean isPlayer) {
+		this.isPlayer = isPlayer;
 	}
 
 }

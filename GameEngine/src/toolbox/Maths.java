@@ -8,6 +8,41 @@ import entities.Camera;
 
 public class Maths {
 	
+	public static boolean isShelter(Vector3f camPosition, Vector3f playerPosition, Vector3f objPosition) {
+		for (int i = -10; i < 10; i++) {
+			for (int j = -10; j < 10; j++) {
+				for (int k = -10; k < 10; k++) {
+					Vector3f objPosition_tmp = new Vector3f(objPosition.x + i, objPosition.y + j, objPosition.z + k);
+					Vector3f camNormail = new Vector3f(camPosition.x, 0, camPosition.z);
+					Vector3f v0 = Vector3f.sub(camNormail, camPosition, null);
+					Vector3f v1 = Vector3f.sub(playerPosition, camPosition, null);
+					Vector3f v2 = Vector3f.sub(objPosition_tmp, camPosition, null);
+					float dot00 = Vector3f.dot(v0, v0) ;
+				    float dot01 = Vector3f.dot(v0, v1) ;
+				    float dot02 = Vector3f.dot(v0, v2) ;
+				    float dot11 = Vector3f.dot(v1, v1) ;
+				    float dot12 = Vector3f.dot(v1, v2) ;
+				    float inverDeno = 1 / (dot00 * dot11 - dot01 * dot01) ;
+
+				    float u = (dot11 * dot02 - dot01 * dot12) * inverDeno ;
+				    if (u < 1 && u > 0) {
+				        return true ;
+				    }
+
+				    float v = (dot00 * dot12 - dot01 * dot02) * inverDeno ;
+				    // if v out of range, return directly
+				    if (v < 1 && v > 0) {
+				        return true ;
+				    }
+				    if(u + v > 1) {
+				    	return true;
+				    }
+				}
+			}
+		}
+	    return false;
+	}
+	
 	/**重心插值
 	 * @param p1
 	 * @param p2

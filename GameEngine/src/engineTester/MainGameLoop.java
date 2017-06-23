@@ -28,6 +28,8 @@ import objConverter.OBJFileLoader;
 import particles.ParticleMaster;
 import particles.ParticleSystem;
 import particles.ParticleTexture;
+import postProcessing.Fbo;
+import postProcessing.PostProcessing;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
@@ -178,13 +180,22 @@ public class MainGameLoop {
         
         ParticleTexture particleTexture = new ParticleTexture(loader.loadTexture("particleAtlas"), 4, true);
         
-        ParticleSystem particleSystem = new ParticleSystem(particleTexture, 40, 10, 0.1f, 1, 1.6f);
+        ParticleSystem particleSystem = new ParticleSystem(particleTexture, 40, 10, 0.1f, 1, 0.6f);
         particleSystem.randomizeRotation();
-        particleSystem.setDirection(new Vector3f(0, 1, 0), 0.1f);
-        particleSystem.setLifeError(0.1f);
-        particleSystem.setSpeedError(0.25f);
-        particleSystem.setScaleError(0.5f);
+        particleSystem.setDirection(new Vector3f(0, 1, 0), 0.5f);
+        particleSystem.setLifeError(0.2f);
+        particleSystem.setSpeedError(0.5f);
+        particleSystem.setScaleError(1.5f);
         
+        ParticleSystem particleSystem1 = new ParticleSystem(particleTexture, 40, 10, 0.1f, 1, 1.6f);
+        particleSystem1.randomizeRotation();
+        particleSystem1.setDirection(new Vector3f(0, 1, 0), 0.1f);
+        particleSystem1.setLifeError(0.2f);
+        particleSystem1.setSpeedError(0.25f);
+        particleSystem1.setScaleError(0.5f);
+        
+        Fbo fbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_RENDER_BUFFER);
+        PostProcessing.init(loader);
         
         //****************Game Loop Below*********************
         player.setCamera(camera);
@@ -196,7 +207,17 @@ public class MainGameLoop {
             ParticleMaster.update(camera);
             
             renderer.renderShadowMap(entities, sun);
-            particleSystem.generateParticles(player.getPosition());
+            Vector3f particlePosition = new Vector3f(player.getPosition());
+            Vector3f particlePosition1 = new Vector3f(player.getPosition());
+            particlePosition.y += 3f;
+            particlePosition.x += 0.6f;
+            particlePosition.z += 0.6f;
+            
+            particlePosition1.y += 3f;
+            particlePosition1.x -= 0.6f;
+            particlePosition1.z -= 0.6f;
+            particleSystem.generateParticles(particlePosition);
+            particleSystem.generateParticles(particlePosition1);
             
             GL11.glEnable(GL30.GL_CLIP_DISTANCE0);
              
@@ -217,10 +238,14 @@ public class MainGameLoop {
             //render to screen
             GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
             buffers.unbindCurrentFrameBuffer(); 
+            
+            fbo.bindFrameBuffer();
+            
             renderer.renderScene(entities, normalMapEntities, terrains, lights, camera, new Vector4f(0, -1, 0, 100000));    
             waterRenderer.render(waters, camera, sun);
-            
             ParticleMaster.renderParticles(camera);
+            fbo.unbindFrameBuffer();
+            PostProcessing.doPostProcessing(fbo.getColourTexture());
             
             guiRenderer.render(guiTextures);
             TextMaster.render();
@@ -228,6 +253,8 @@ public class MainGameLoop {
             DisplayManager.updateDisplay();
         }
 
+        PostProcessing.cleanUp();
+        fbo.cleanUp();
         ParticleMaster.cleanUp();
         TextMaster.cleanUp();
 		buffers.cleanUp();

@@ -1,7 +1,7 @@
 # GameEngine
 OpenGL 3D Game Tutorial of ThinMatrix 
 
-Developed by LWJGL2.9 + Eclipese
+Developed by LWJGL2.9 + Eclipse
 
 ---
 
